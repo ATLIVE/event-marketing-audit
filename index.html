@@ -703,8 +703,7 @@ function downloadPDF(){
   doc.setFont(FF,"bold");doc.setFontSize(9);doc.setTextColor(...gold);
   doc.text("EVENT MARKETING AUDIT",W-M,14.5,{align:"right"});
   let topY=24;
-  if(ATL_BANNER){try{doc.addImage(ATL_BANNER,"JPEG",0,24,W,26);topY=50;}catch(e){}}
-  /* thin gold rule under the top block */
+  /* thin gold rule under the header */
   doc.setFillColor(...gold);doc.rect(0,topY,W,1,"F");
   y=topY+16;
   doc.setTextColor(...ink);doc.setFont(FF,"bold");doc.setFontSize(18);
