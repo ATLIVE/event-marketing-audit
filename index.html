@@ -342,7 +342,7 @@ h1{color:#fff;font-weight:700;text-transform:uppercase;letter-spacing:0;
     </div>
     <div class="gate" id="gate">
       <h3>Unlock your full breakdown</h3>
-      <p>See your score across all 8 pillars, your ranked quick wins, and claim your free 30-minute audit. We'll email you a copy to keep.</p>
+      <p>See your score across all 8 pillars, your ranked quick wins, and claim your free 30-minute audit. We'll email your results and you can download a copy to keep.</p>
       <div class="form">
         <label>Your name</label><input id="fName" placeholder="Jane Smith" autocomplete="name">
         <label>Email, where we'll send your results</label><input id="fEmail" type="email" placeholder="jane@event.com" autocomplete="email">
@@ -358,6 +358,7 @@ h1{color:#fff;font-weight:700;text-transform:uppercase;letter-spacing:0;
         <h3>Turn this into a <span class="script">Plan</span></h3>
         <p>Book your free 30-minute audit call. We'll dig into your two weakest areas and leave you with three things to action straight away, no obligation.</p>
         <button class="cta" onclick="book()">Book my free audit &nbsp;<span class="arw">→</span></button>
+        <div style="margin-top:16px"><button onclick="downloadPDF()" style="background:transparent;border:1.5px solid var(--gold);color:#fff;font-family:inherit;font-weight:700;font-size:13px;letter-spacing:.03em;padding:11px 22px;border-radius:9px;cursor:pointer">Download my results (PDF)</button></div>
         <small id="bookNote">Your full results are also on their way to your inbox.</small>
       </div>
       <details class="qw" id="qwWrap" style="display:none">
@@ -370,6 +371,7 @@ h1{color:#fff;font-weight:700;text-transform:uppercase;letter-spacing:0;
   </div>
 </section>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
 /* ===== EDIT WHEN LIVE ===== */
 const BOOKING_URL="https://calendar.app.google/9rvashfpb4MtGxSx5";
@@ -653,6 +655,87 @@ function closeBook(){
   document.body.style.overflow="";
 }
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closeBook();});
+
+function downloadPDF(){
+  if(!RESULT||!(window.jspdf&&window.jspdf.jsPDF)){alert("Your results are still loading, please try again in a moment.");return;}
+  const {jsPDF}=window.jspdf;
+  const doc=new jsPDF({unit:"mm",format:"a4"});
+  const W=210,H=297,M=18;let y=0;
+  const ink=[28,28,28],grey=[95,95,95],line=[226,226,226],gold=[251,190,21];
+  const lead=window._lead||{};
+  const P=PROFILE||{};
+  const evName=(P.event||lead.event||"Your event");
+  const name=lead.name||"";
+  const band=$("bandTxt").textContent||"";
+  const sub=$("bandSub").textContent||"";
+  /* header */
+  doc.setFillColor(...ink);doc.rect(0,0,W,26,"F");
+  doc.setTextColor(255,255,255);doc.setFont("helvetica","bold");doc.setFontSize(17);
+  doc.text("ATLIVE",M,16);
+  doc.setFont("helvetica","normal");doc.setFontSize(10);doc.setTextColor(...gold);
+  doc.text("Event Marketing Audit",W-M,16,{align:"right"});
+  y=40;
+  doc.setTextColor(...ink);doc.setFont("helvetica","bold");doc.setFontSize(18);
+  doc.text(evName,M,y);
+  y+=7;doc.setFont("helvetica","normal");doc.setFontSize(10);doc.setTextColor(...grey);
+  const dstr=new Date().toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"});
+  doc.text((name?name+"  ·  ":"")+dstr,M,y);
+  y+=12;
+  /* score box */
+  doc.setDrawColor(...line);doc.setFillColor(248,248,246);doc.roundedRect(M,y,W-2*M,32,3,3,"FD");
+  doc.setTextColor(...ink);doc.setFont("helvetica","bold");doc.setFontSize(36);
+  doc.text(String(RESULT.overall),M+10,y+22);
+  const sw=doc.getTextWidth(String(RESULT.overall));
+  doc.setFontSize(12);doc.setTextColor(...grey);doc.text("/100",M+12+sw,y+22);
+  doc.setFont("helvetica","bold");doc.setFontSize(16);doc.setTextColor(...ink);
+  doc.text(band,M+58,y+13);
+  doc.setFont("helvetica","normal");doc.setFontSize(9.5);doc.setTextColor(...grey);
+  doc.text(doc.splitTextToSize(sub,W-2*M-64),M+58,y+20);
+  y+=44;
+  /* pillars */
+  doc.setFont("helvetica","bold");doc.setFontSize(12);doc.setTextColor(...ink);
+  doc.text("Your eight pillars",M,y);y+=8;
+  doc.setFontSize(9.5);
+  const barX=M+72,barW=W-M-barX-12;
+  RESULT.pScore.forEach((s,i)=>{
+    doc.setTextColor(...ink);doc.setFont("helvetica","normal");
+    doc.text(PILLARS[i].label,M,y+2.6);
+    doc.setFillColor(...line);doc.roundedRect(barX,y,barW,3.2,1.6,1.6,"F");
+    const col=s>=70?[46,160,67]:s>=40?[251,190,21]:[214,69,69];
+    doc.setFillColor(...col);doc.roundedRect(barX,y,Math.max(barW*s/100,2),3.2,1.6,1.6,"F");
+    doc.setTextColor(...grey);doc.text(String(s),W-M,y+2.6,{align:"right"});
+    y+=9;
+  });
+  y+=5;
+  /* quick wins */
+  const ranked=RESULT.pScore.map((s,i)=>({s,i})).sort((a,b)=>a.s-b.s).slice(0,3);
+  doc.setFont("helvetica","bold");doc.setFontSize(12);doc.setTextColor(...ink);
+  doc.text("Your priority quick wins",M,y);y+=8;
+  ranked.forEach((o,idx)=>{
+    const PL=PILLARS[o.i];
+    if(y>H-46){doc.addPage();y=M+4;}
+    doc.setFont("helvetica","bold");doc.setFontSize(11);doc.setTextColor(...ink);
+    doc.text((idx+1)+".  "+PL.label+"   ("+o.s+"/100)",M,y);y+=5.5;
+    doc.setFont("helvetica","normal");doc.setFontSize(9.5);doc.setTextColor(...grey);
+    const wl=doc.splitTextToSize(PL.win,W-2*M);doc.text(wl,M,y);y+=wl.length*4.7+2.5;
+    doc.setTextColor(...ink);doc.setFont("helvetica","bold");doc.setFontSize(8);
+    doc.text("WHAT WE WOULD DO",M,y);y+=4.6;
+    doc.setFont("helvetica","normal");doc.setFontSize(9.5);doc.setTextColor(...grey);
+    const al=doc.splitTextToSize(PL.atl,W-2*M);doc.text(al,M,y);y+=al.length*4.7+8;
+  });
+  /* CTA */
+  if(y>H-40){doc.addPage();y=M+4;}
+  doc.setFillColor(...ink);doc.roundedRect(M,y,W-2*M,26,3,3,"F");
+  doc.setTextColor(255,255,255);doc.setFont("helvetica","bold");doc.setFontSize(12.5);
+  doc.text("Book your free 30-minute audit",M+9,y+11);
+  doc.setFont("helvetica","normal");doc.setFontSize(9);doc.setTextColor(...gold);
+  doc.text(BOOKING_URL,M+9,y+19);
+  /* footer */
+  doc.setTextColor(...grey);doc.setFont("helvetica","normal");doc.setFontSize(7.5);
+  doc.text("ATLIVE, content and experiences built around your audience, then made sure they see it.  ·  atlive.uk",M,H-10);
+  const fn=("ATLIVE Audit "+evName).replace(/[^a-z0-9]+/gi,"-").replace(/^-|-$/g,"")+".pdf";
+  doc.save(fn);
+}
 
 function restart(){
   cur=0;answers.fill(null);RESULT=null;PROFILE=null;window._lead=null;
