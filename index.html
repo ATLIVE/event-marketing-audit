@@ -113,17 +113,17 @@ h1{color:#fff;font-weight:700;text-transform:uppercase;letter-spacing:0;
 .drop{animation:dropIn .52s cubic-bezier(.16,.84,.24,1) both}
 
 /* photos: right-side whitespace, behind content, fly in separately */
-.qimg{position:absolute;aspect-ratio:4/5;border-radius:0;overflow:hidden;z-index:1;cursor:pointer;pointer-events:auto;
+.qimg{position:absolute;aspect-ratio:3/2;border-radius:0;overflow:hidden;z-index:1;cursor:pointer;pointer-events:auto;
   box-shadow:0 22px 44px rgba(0,0,0,.24),0 6px 14px rgba(0,0,0,.14);
-  transform:perspective(1000px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) rotate(var(--base,-4deg));
+  transform:none;
   transition:transform .25s cubic-bezier(.2,.7,.2,1),box-shadow .22s ease}
 .qimg:hover{box-shadow:0 34px 66px rgba(0,0,0,.32),0 8px 18px rgba(0,0,0,.2)}
 .qimg img{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
 .qimg.imgout{opacity:0;transition:opacity .2s ease}
 .qimg.flyin{animation:flyImg .66s cubic-bezier(.14,.86,.26,1) both}
 @keyframes flyImg{
-  from{opacity:0;transform:perspective(1000px) translate(70px,18px) rotate(var(--base,-4deg)) scale(.9)}
-  to{opacity:1;transform:perspective(1000px) translate(0,0) rotate(var(--base,-4deg)) scale(1)}
+  from{opacity:0;transform:translate(40px,14px) scale(.96)}
+  to{opacity:1;transform:translate(0,0) scale(1)}
 }
 .qphotos{position:absolute;inset:0;z-index:0;pointer-events:none}
 .qimg-a{z-index:1}.qimg-b{display:none;z-index:2}
@@ -465,7 +465,7 @@ const QUESTIONS=[
 ];
 
 /* scenes that show two overlapped photos */
-const DOUBLE=[1,3,5];
+const DOUBLE=[];
 
 const $=id=>document.getElementById(id);
 let cur=0;const LAST=QUESTIONS.length-1;
@@ -496,11 +496,9 @@ const SCALE=[1.0,0.9,0.98,0.9,1.02,0.9,0.96,1.0];
 function sizeCard(el,ar,scene){
   el.dataset.ar=ar;el.dataset.sc=scene;
   const vw=window.innerWidth||1200;
-  let u=Math.min(320,Math.max(212,vw*0.185))*(SCALE[scene]||1);
-  let w=u*Math.sqrt(ar);
-  w=Math.min(w,u*1.5);w=Math.max(w,u*0.72);
-  el.style.width=Math.round(w)+'px';
-  el.style.aspectRatio=ar;
+  let u=Math.min(360,Math.max(240,vw*0.21))*(SCALE[scene]||1);
+  el.style.width=Math.round(u)+'px';
+  el.style.aspectRatio='3 / 2';
 }
 function flag(el,ok){if(ok){el.classList.remove("invalid");}else{el.classList.remove("invalid");void el.offsetWidth;el.classList.add("invalid");}}
 function splitQ(t){const m=t.match(/\s*\(([^)]*)\)/);if(m){const main=(t.slice(0,m.index)+t.slice(m.index+m[0].length)).replace(/\s{2,}/g,' ').replace(/\s+([?.,;:])/g,'$1').trim();return [main,'('+m[1].trim()+')'];}return [t,''];}
