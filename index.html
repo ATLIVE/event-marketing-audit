@@ -187,7 +187,9 @@ h1{color:#fff;font-weight:700;text-transform:uppercase;letter-spacing:0;
 .callcard h3{color:#fff;font-size:24px;font-weight:700;text-transform:uppercase;margin-bottom:10px}
 .callcard h3 .g{color:var(--gold)}
 .callcard p{color:#cfcbc2;font-weight:400;font-size:14.5px;max-width:500px;margin:0 auto 22px}
-.callcard small{display:block;margin-top:14px;color:#8a857b;font-size:12px}
+.callcard small{display:block;margin-top:18px;color:#8a857b;font-size:12.5px}
+.callcard small .pdflink{color:#cfcbc2;text-decoration:underline;text-underline-offset:2px;cursor:pointer}
+.callcard small .pdflink:hover{color:#febf10}
 .restart{background:none;border:none;color:#9a9a9a;text-decoration:underline;cursor:pointer;font-family:inherit;font-size:13px;margin:24px 0 0}
 .lfoot{text-align:center;font-size:12px;font-weight:400;color:#a2a2a2;margin-top:40px;line-height:1.7}
 @media(max-width:600px){
@@ -369,14 +371,14 @@ h1,h2,.qtext,.gate h3,.callcard h3{font-weight:700;text-transform:uppercase}
     </div>
     <div class="gate" id="gate">
       <h3>Unlock your full breakdown</h3>
-      <p>See your score across all 8 pillars, your ranked quick wins, and claim your free 30-minute audit. We'll email your results and you can download a copy to keep.</p>
+      <p>See your score across all 8 pillars, your ranked quick wins, and claim your free 30-minute audit. You can download a copy of your results to keep.</p>
       <div class="form">
         <label>Your name</label><input id="fName" placeholder="Jane Smith" autocomplete="name">
-        <label>Email, where we'll send your results</label><input id="fEmail" type="email" placeholder="jane@event.com" autocomplete="email">
+        <label>Email</label><input id="fEmail" type="email" placeholder="jane@event.com" autocomplete="email">
         <div class="err" id="formErr">Please add your name and a valid email.</div>
         <div style="text-align:center;margin-top:20px"><a class="atl-btn atl-btn--ink" href="#" role="button" onclick="unlock();return false"><span class="atl-btn__fill"></span><span class="atl-btn__label">Reveal my full results</span><svg viewBox="0 0 16 11" aria-hidden="true"><path d="M0 5.5h14M10.5 1.5l4 4-4 4" stroke="currentColor" stroke-width="1.6" fill="none"/></svg></a></div>
       </div>
-      <small>We'll send your results and add your email to the ATLIVE mailing list. No spam, we'll never share your data, and you can unsubscribe anytime.</small>
+      <small>We'll add your email to the ATLIVE mailing list so we can follow up about your audit. No spam, we'll never share your data, and you can unsubscribe anytime.</small>
     </div>
     <div id="detail">
       <div class="section-h">Your eight pillars</div>
@@ -385,8 +387,7 @@ h1,h2,.qtext,.gate h3,.callcard h3{font-weight:700;text-transform:uppercase}
         <h3>Turn this into a <span class="script">Plan</span></h3>
         <p>Book your free 30-minute audit call. We'll dig into your two weakest areas and leave you with three things to action straight away, no obligation.</p>
         <a class="atl-btn" href="#" role="button" onclick="book();return false"><span class="atl-btn__fill"></span><span class="atl-btn__label">Book my free audit</span><svg viewBox="0 0 16 11" aria-hidden="true"><path d="M0 5.5h14M10.5 1.5l4 4-4 4" stroke="currentColor" stroke-width="1.6" fill="none"/></svg></a>
-        <div style="margin-top:16px"><a class="atl-btn atl-btn--quiet" href="#" role="button" onclick="downloadPDF();return false"><span class="atl-btn__fill"></span><span class="atl-btn__label">Download my results (PDF)</span><svg viewBox="0 0 16 11" aria-hidden="true"><path d="M0 5.5h14M10.5 1.5l4 4-4 4" stroke="currentColor" stroke-width="1.6" fill="none"/></svg></a></div>
-        <small id="bookNote">Your full results are also on their way to your inbox.</small>
+        <small id="bookNote">Prefer to read first? <a href="#" onclick="downloadPDF();return false" class="pdflink">Download your results as a PDF</a>.</small>
       </div>
       <details class="qw" id="qwWrap" style="display:none">
         <summary>See what you can do right now</summary>
