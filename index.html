@@ -139,13 +139,13 @@ h1{color:#fff;font-weight:700;text-transform:uppercase;letter-spacing:0;
 .v5 .qimg-b{right:4vw;top:36vh;--base:5deg}
 .v6 .qimg-a{right:12vw;top:30vh;--base:3deg}
 .v7 .qimg-a{right:9vw;top:22vh;--base:4deg}
+.qimg-m{display:none}
 @media(max-width:1024px){
   .qslide{min-height:0}
   .qwrap{min-height:auto;padding-bottom:50px}
-  .qphotos{position:static;pointer-events:auto}
-  .qphotos .qimg-b{display:none!important}
-  .qphotos .qimg-a{position:static!important;display:block;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;
-    width:auto!important;height:210px!important;max-width:90vw;margin:26px auto 0;--base:-2deg}
+  .qphotos{display:none!important}
+  .qimg-m{display:block;width:100%;max-width:360px;aspect-ratio:3/2;overflow:hidden;border-radius:0;margin:6px 0 22px;background:#f1efe9}
+  .qimg-m img{width:100%;height:100%;object-fit:cover;display:block}
 }
 
 /* ---------- ABOUT + RESULTS ---------- */
@@ -254,8 +254,7 @@ h1,h2,.qtext,.gate h3,.callcard h3{font-weight:700;text-transform:uppercase}
     <div class="hero-body">
       <div class="kicker reveal d2">Free event marketing audit</div>
       <h1 class="reveal d3">How show-ready is your<br>event marketing?</h1>
-      <p class="lead reveal d4">Answer 24 quick questions across the eight areas that decide whether your audience finds you, feels you, and buys a ticket.</p>
-      <p class="score reveal d5"><span class="g">Get an instant score:</span> A breakdown of where you're strong and where you're leaking, and the first moves to fix it.</p>
+      <p class="lead reveal d4">A free 5-minute health-check of your event marketing, built to help you sell more tickets. Answer a few quick questions and see exactly where you're winning, where you're losing sales, and what to fix first.</p>
       <ul class="checks reveal d5">
         <li>Your marketing score out of 100, instantly</li>
         <li>A breakdown across all 8 pillars of event marketing</li>
@@ -309,6 +308,7 @@ h1,h2,.qtext,.gate h3,.callcard h3{font-weight:700;text-transform:uppercase}
         <div class="qcol" id="qcol">
           <h2 class="qtext" id="qText"></h2>
           <div class="qsub" id="qSub"></div>
+          <div class="qimg-m" id="qimgM"><img id="qImgM" alt=""></div>
           <div id="opts"></div>
           <button class="ghost" id="backBtn" onclick="back()" style="display:none">← Back</button>
         </div>
@@ -557,6 +557,7 @@ function paintQuestion(){
   const scene=cur%8, dbl=DOUBLE.indexOf(scene)>=0;
   $("qphotos").className="qphotos v"+scene+(dbl?" double":"");
   const A=imgFor(cur),a=$("qimgA");a.style.display="";sizeCard(a,A[1],scene);$("qImgA").src=A[0];fly(a,.30);
+  var mImg=$("qImgM");if(mImg)mImg.src=A[0];
   const b=$("qimgB");
   if(dbl){const B=imgFor(cur+4);b.style.display="";sizeCard(b,B[1],scene);$("qImgB").src=B[0];fly(b,.52);}else{b.style.display="none";}
 }
